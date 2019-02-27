@@ -27,14 +27,14 @@ inline void drawPixel(SDL_Surface *screen, int x, int y, Uint8 red, Uint8 green,
 void drawLine(SDL_Surface* screen, int x1, int y1, int x2, int y2, Uint8 red, Uint8 green, Uint8 blue);
 void drawCircle(SDL_Surface* screen, int x0, int y0, int radius, Uint8 red, Uint8 green, Uint8 blue);
 
-void rotateVerticesAroundX(vector<Point>& vertexes, double angle);
-void rotateVerticesAroundY(vector<Point>& vertexes, double angle);
-void rotateVerticesAroundZ(vector<Point>& vertexes, double angle);
-void createCubeVertices(vector<Point>& vertexes); // Сreating cube vertices
+void rotateVerticesAroundX(vector<Point>& vertices, double angle);
+void rotateVerticesAroundY(vector<Point>& vertices, double angle);
+void rotateVerticesAroundZ(vector<Point>& vertices, double angle);
+void createCubeVertices(vector<Point>& vertices); // Сreating cube vertices
 vector<Edge> createCubeEdges(const vector<Point>& vertexes); // Сreating cube edges using vertices
 void drawWireFrame(SDL_Surface* screen, const vector<Edge>& edges, Uint8 red, Uint8 green, Uint8 blue);
-void downFaces1(vector<Point>& vertexes);
-void downFaces2(vector<Point>& vertexes);
+void downFaces1(vector<Point>& vertices);
+void downFaces2(vector<Point>& vertices);
 void rotatePointAroundX(Point& point1, const Point& point2, double angle);
 void rotatePointAroundY(Point& point1, const Point& point2, double angle);
 void rotatePointAroundZ(Point& point1, const Point& point2, double angle);
