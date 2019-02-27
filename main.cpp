@@ -1,5 +1,5 @@
 #include <iostream>
-#include <SDL.h> // SDL 1.2.15
+#include <SDL.h>  // SDL 1.2.15
 #include <vector>
 using namespace std;
 
@@ -14,6 +14,7 @@ class Mesh
 public:
 	Mesh(SDL_Surface* screen);
 	void draw();
+	void event();
 private:
 	struct Point
 	{
@@ -31,11 +32,12 @@ private:
 	void createCubeEdges(); // Сreating cube edges using vertices
 	void drawWireFrame(Uint8 red, Uint8 green, Uint8 blue);
 	void downFaces();
+	void upFaces();
 	void rotatePointAroundX(Point& point1, const Point& point2, double angle);
 	void rotatePointAroundY(Point& point1, const Point& point2, double angle);
 	void rotatePointAroundZ(Point& point1, const Point& point2, double angle);
 	SDL_Surface *screen;
-	int i, i1;
+	int i, i1, ev;
 	vector<Edge> edges;
 	vector<Point> vertices, verticesCopy;
 };
@@ -50,7 +52,6 @@ int wmain(int argc, wchar_t *argv[], wchar_t *envp[])
 	SDL_Event event;
 	SDL_Surface* screen = NULL;
 	int keypress{};
-
 	if (SDL_Init(SDL_INIT_VIDEO) < 0) return 1;
 	if (!(screen = SDL_SetVideoMode(WIDTH, HEIGHT, DEPTH, SDL_HWSURFACE)))
 	{
@@ -60,16 +61,19 @@ int wmain(int argc, wchar_t *argv[], wchar_t *envp[])
 	Mesh cube(screen);
 	while (!keypress)
 	{
-		while (SDL_PollEvent(&event))
+		while (SDL_PollEvent(&event) != 0)
 		{
-			switch (event.type)
+			if (event.type == SDL_QUIT)
 			{
-			case SDL_QUIT:
 				keypress = 1;
-				break;
-			case SDL_KEYDOWN:
-				keypress = 1;
-				break;
+			}
+			else if (event.type == SDL_KEYDOWN)
+			{
+				switch (event.key.keysym.sym)
+				{
+				case SDLK_SPACE:
+					cube.event();
+				}
 			}
 		}
 		clearScreen(screen);
@@ -81,7 +85,7 @@ int wmain(int argc, wchar_t *argv[], wchar_t *envp[])
 	return 0;
 }
 
-Mesh::Mesh(SDL_Surface* screen) : screen{ screen }, i{ 0 }, i1{ 0 }, edges(19), vertices(14), verticesCopy(14)
+Mesh::Mesh(SDL_Surface* screen) : screen{ screen }, i{ 0 }, i1{ 0 }, ev{ 0 }, edges(19), vertices(14), verticesCopy(14)
 {
 	double R = 100;
 	vertices[0] = Point(-R, -R, R); //0
@@ -101,7 +105,14 @@ Mesh::Mesh(SDL_Surface* screen) : screen{ screen }, i{ 0 }, i1{ 0 }, edges(19), 
 }
 void Mesh::draw()
 {
-	downFaces();
+	if (ev == 1)
+	{
+		downFaces();
+	}
+	else if (ev == 3)
+	{
+		upFaces();
+	}
 	verticesCopy = vertices;
 	rotateVerticesAroundY(i / 10.0);
 	createCubeEdges();
@@ -109,6 +120,14 @@ void Mesh::draw()
 	if (++i == 3600)
 	{
 		i = 0;
+	}
+}
+
+void Mesh::event()
+{
+	if (++ev == 4)
+	{
+		ev = 0;
 	}
 }
 
@@ -124,7 +143,6 @@ void Mesh::rotatePointAroundX(Point& point, const Point& basePoint, double angle
 	point.z = point.y * sin_ + point.z * cos_ + basePoint.z;
 	point.y = temp + basePoint.y;
 }
-
 void Mesh::rotatePointAroundY(Point& point, const Point& basePoint, double angle)
 {
 	// rotation of a point (point) around the base point (basePoint) along the axis Y
@@ -153,8 +171,8 @@ void Mesh::rotatePointAroundZ(Point& point, const Point& basePoint, double angle
 
 void Mesh::downFaces()
 {
-	double angle = 0.1;
-	if (i1 <= 900)
+	double angle = 0.050;
+	if (i1 <= 1800)
 	{
 		rotatePointAroundZ(vertices[0], vertices[10], -angle);
 		rotatePointAroundZ(vertices[1], vertices[11], -angle);
@@ -164,15 +182,32 @@ void Mesh::downFaces()
 		rotatePointAroundX(vertices[3], vertices[12], angle);
 		rotatePointAroundX(vertices[9], vertices[10], -angle);
 		rotatePointAroundX(vertices[8], vertices[13], -angle);
-		++i1;
-	}
-	if (i1 > 900 && i1 < 1800)
-	{
 		rotatePointAroundZ(vertices[5], vertices[12], angle);
 		rotatePointAroundZ(vertices[6], vertices[13], angle);
 		rotatePointAroundZ(vertices[4], vertices[12], angle);
 		rotatePointAroundZ(vertices[7], vertices[13], angle);
-		++i1;
+		i1++;
+	}
+}
+
+void Mesh::upFaces()
+{
+	double angle = 0.050;
+	if (i1 >= 0)
+	{
+		rotatePointAroundZ(vertices[0], vertices[10], angle);
+		rotatePointAroundZ(vertices[1], vertices[11], angle);
+		rotatePointAroundZ(vertices[5], vertices[4], -angle);
+		rotatePointAroundZ(vertices[6], vertices[7], -angle);
+		rotatePointAroundX(vertices[2], vertices[11], -angle);
+		rotatePointAroundX(vertices[3], vertices[12], -angle);
+		rotatePointAroundX(vertices[9], vertices[10], angle);
+		rotatePointAroundX(vertices[8], vertices[13], angle);
+		rotatePointAroundZ(vertices[5], vertices[12], -angle);
+		rotatePointAroundZ(vertices[6], vertices[13], -angle);
+		rotatePointAroundZ(vertices[4], vertices[12], -angle);
+		rotatePointAroundZ(vertices[7], vertices[13], -angle);
+		i1--;
 	}
 }
 
