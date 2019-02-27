@@ -103,6 +103,7 @@ Mesh::Mesh(SDL_Surface* screen) : screen{ screen }, i{ 0 }, i1{ 0 }, ev{ 0 }, ed
 	vertices[12] = Point(R, R, -R); // 12
 	vertices[13] = Point(R, R, R); // 13
 }
+
 void Mesh::draw()
 {
 	if (ev == 1)
@@ -143,6 +144,7 @@ void Mesh::rotatePointAroundX(Point& point, const Point& basePoint, double angle
 	point.z = point.y * sin_ + point.z * cos_ + basePoint.z;
 	point.y = temp + basePoint.y;
 }
+
 void Mesh::rotatePointAroundY(Point& point, const Point& basePoint, double angle)
 {
 	// rotation of a point (point) around the base point (basePoint) along the axis Y
