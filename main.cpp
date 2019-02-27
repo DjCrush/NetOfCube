@@ -30,7 +30,6 @@ void drawCircle(SDL_Surface* screen, int x0, int y0, int radius, Uint8 red, Uint
 void rotateVerticesAroundX(vector<Point>& vertexes, double angle);
 void rotateVerticesAroundY(vector<Point>& vertexes, double angle);
 void rotateVerticesAroundZ(vector<Point>& vertexes, double angle);
-void createSphere(vector<Edge>& sphere);
 void createCubeVertices(vector<Point>& vertexes); // Сreating cube vertices
 vector<Edge> createCubeEdges(const vector<Point>& vertexes); // Сreating cube edges using vertices
 void drawWireFrame(SDL_Surface* screen, const vector<Edge>& edges, Uint8 red, Uint8 green, Uint8 blue);
@@ -153,45 +152,6 @@ void downFaces2(vector<Point>& vertexes)
 	rotatePointAroundZ(vertexes[6], vertexes[13], angle);
 	rotatePointAroundZ(vertexes[4], vertexes[12], angle);
 	rotatePointAroundZ(vertexes[7], vertexes[13], angle);
-}
-
-void createSphere(vector<Edge>& sphere)
-{
-	double x, z, oldx = 0, oldz = 0;
-	int step = 10;
-	for (int i1 = 0; i1 < 360; i1 += step)
-	{
-		double R = sin(i1 * PI / 180) * 400;
-		double y = cos(i1 * PI / 180) * 200;
-		for (int i = 0; i <= 360; i += step)
-		{
-			double gr = i * PI / 180;
-			x = sin(gr) * R;
-			z = cos(gr) * R;
-			if (!(i == 0 || i == 360))
-			{
-				sphere.push_back({ { x, y, z }, { oldx, y, oldz } });
-			}
-			oldx = x;
-			oldz = z;
-		}
-		if (i1 != 0)
-		{
-			double Rprev = sin((i1 - step) * PI / 180) * 400;
-			double yprev = cos((i1 - step) * PI / 180) * 200;
-			for (int i = 0; i <= 360; i += step)
-			{
-				double gr = i * PI / 180;
-				double xprev = sin(gr) * Rprev;
-				double zprev = cos(gr) * Rprev;
-				x = sin(gr) * R;
-				z = cos(gr) * R;
-				sphere.push_back({ { xprev, yprev, zprev}, {x, y, z }
-					});
-			}
-		}
-	}
-	sphere.shrink_to_fit();
 }
 
 void drawWireFrame(SDL_Surface* screen, const vector<Edge>& edges, Uint8 red, Uint8 green, Uint8 blue)
