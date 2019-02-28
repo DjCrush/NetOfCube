@@ -1,8 +1,6 @@
 #include <SDL.h>  // SDL 1.2.15
-#include <vector>
 #include "Graphics.h"
 #include "Mesh.h"
-using namespace std;
 
 int wmain(int argc, wchar_t *argv[], wchar_t *envp[])
 {
