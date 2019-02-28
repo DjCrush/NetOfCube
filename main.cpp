@@ -1,5 +1,3 @@
-#include "pch.h"
-#include <iostream>
 #include <SDL.h>  // SDL 1.2.15
 #include <vector>
 #include "Graphics.h"
