@@ -1,4 +1,3 @@
-#include "pch.h"
 #include "Graphics.h"
 
 const int WIDTH = 1600;
